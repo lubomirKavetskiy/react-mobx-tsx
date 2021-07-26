@@ -1,4 +1,6 @@
-import { makeObservable, observable, autorun, action } from 'mobx';
+import { makeObservable, observable, autorun, runInAction } from 'mobx';
+
+const awaitForPromise = () => new Promise(resolve => setTimeout(resolve, 1000))
 
 class Person {
   @observable
@@ -12,27 +14,18 @@ class Person {
     this.lastName = last_name
     makeObservable(this)
   }
-
-  @action updFirstName(upd_first_name: string) {
-    this.firstName = upd_first_name
-  }
-
-  @action updLastName(upd_last_name: string) {
-    this.lastName = upd_last_name
-  }
-
-  @action updFullName(upd_first_name: string, upd_last_name: string) {
-    this.firstName = upd_first_name
-    this.lastName = upd_last_name
-  }
 }
 
 const newPerson = new Person('A', 'a')
 
 autorun(() => { console.log(newPerson.firstName, newPerson.lastName) })
 
-newPerson.updFirstName("B")
-newPerson.updLastName("b")
-newPerson.updFullName("C", "c")
+runInAction(async () => {
+  newPerson.firstName = "B"
+
+  await awaitForPromise()
+
+  newPerson.lastName = "b"
+})
 
 export { }
