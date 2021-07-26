@@ -1,33 +1,38 @@
-import { observable, autorun, action, runInAction } from 'mobx';
+import { makeObservable, observable, autorun, action } from 'mobx';
 
 class Person {
   @observable
   firstName: string
 
-  constructor(name: string) {
-    this.firstName = name
+  @observable
+  lastName: string
+
+  constructor(first_name: string, last_name: string) {
+    this.firstName = first_name
+    this.lastName = last_name
+    makeObservable(this)
   }
 
-  @action updFirstName(updName: string) {
-    this.firstName = updName
+  @action updFirstName(upd_first_name: string) {
+    this.firstName = upd_first_name
+  }
+
+  @action updLastName(upd_last_name: string) {
+    this.lastName = upd_last_name
+  }
+
+  @action updFullName(upd_first_name: string, upd_last_name: string) {
+    this.firstName = upd_first_name
+    this.lastName = upd_last_name
   }
 }
 
-const newPerson = new Person('A')
+const newPerson = new Person('A', 'a')
 
-autorun(() => console.log(newPerson.firstName))
+autorun(() => { console.log(newPerson.firstName, newPerson.lastName) })
 
-//use decorator @action
 newPerson.updFirstName("B")
-console.log(newPerson.firstName)
-
-//use runInAction function
-runInAction(() => newPerson.firstName = "C")
-console.log(newPerson.firstName)
-
-// use action function
-const updFirstName = action(() => newPerson.firstName = 'D')
-updFirstName()
-console.log(newPerson.firstName)
+newPerson.updLastName("b")
+newPerson.updFullName("C", "c")
 
 export { }
