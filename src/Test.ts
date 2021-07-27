@@ -1,31 +1,47 @@
-import { makeObservable, observable, autorun, runInAction } from 'mobx';
-
-const awaitForPromise = () => new Promise(resolve => setTimeout(resolve, 1000))
+import { makeObservable, observable, autorun, reaction, when, action } from 'mobx';
 
 class Person {
   @observable
-  firstName: string
+  age: number = 10
 
   @observable
-  lastName: string
+  isAlive: boolean = true
 
-  constructor(first_name: string, last_name: string) {
-    this.firstName = first_name
-    this.lastName = last_name
+  constructor() {
+
     makeObservable(this)
+
+    when(
+      () => this.age > 100,
+      () => this.bury()
+    )
+  }
+
+  @action
+  bury() {
+    this.isAlive = false
+  }
+
+  @action
+  setAge(age: number) {
+    this.age = age
   }
 }
 
-const newPerson = new Person('A', 'a')
+const newPerson = new Person()
 
-autorun(() => { console.log(newPerson.firstName, newPerson.lastName) })
+const autorunDisposer = autorun(
+  () => { console.log(newPerson.age, newPerson.isAlive) }
+)
 
-runInAction(async () => {
-  newPerson.firstName = "B"
+const reactionDisposer = reaction(
+  () => !newPerson.isAlive,
+  () => console.log('person died')
+)
 
-  await awaitForPromise()
+newPerson.setAge(101)
 
-  newPerson.lastName = "b"
-})
+setTimeout(() => { reactionDisposer(); autorunDisposer() }, 2000)
+setTimeout(() => { newPerson.setAge(50); console.log('we disposed of the reactions (autorun and reaction) on changes') }, 2500)
 
 export { }
