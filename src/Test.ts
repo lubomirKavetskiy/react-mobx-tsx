@@ -1,47 +1,40 @@
-import { makeObservable, observable, autorun, reaction, when, action } from 'mobx';
+import { makeObservable, observable, autorun, action, computed } from 'mobx';
 
 class Person {
   @observable
-  age: number = 10
-
-  @observable
-  isAlive: boolean = true
+  dollars = 100
 
   constructor() {
-
     makeObservable(this)
+  }
 
-    when(
-      () => this.age > 100,
-      () => this.bury()
-    )
+  @computed
+  get euros() {
+    return this.dollars * .9
   }
 
   @action
-  bury() {
-    this.isAlive = false
-  }
-
-  @action
-  setAge(age: number) {
-    this.age = age
+  withdraw() {
+    this.dollars -= 10
   }
 }
 
 const newPerson = new Person()
 
-const autorunDisposer = autorun(
-  () => { console.log(newPerson.age, newPerson.isAlive) }
+console.log('Before Observing - Not Cached', newPerson.euros);
+console.log('Before Observing - Not Cached', newPerson.euros);
+
+const dispose = autorun(
+  () => { console.log(newPerson.euros) }
 )
 
-const reactionDisposer = reaction(
-  () => !newPerson.isAlive,
-  () => console.log('person died')
-)
+console.log('After Observing - Cached', newPerson.euros);
+console.log('After Observing - Cached', newPerson.euros);
+console.log('After Observing - Cached', newPerson.euros);
+console.log('After Observing - Cached', newPerson.euros);
 
-newPerson.setAge(101)
+newPerson.withdraw()
 
-setTimeout(() => { reactionDisposer(); autorunDisposer() }, 2000)
-setTimeout(() => { newPerson.setAge(50); console.log('we disposed of the reactions (autorun and reaction) on changes') }, 2500)
+dispose()
 
 export { }
