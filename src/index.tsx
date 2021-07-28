@@ -4,17 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import RootStore from './stores/root-store'
+import { createStore } from './stores/helpers/create-store';
+import { StoreProvider } from './stores/helpers/store-context';
 
-const rootStore = new RootStore()
+const rootStore = createStore()
 
-// create 4 users
+
 rootStore.dataStores.usersStore.addUser('A', 1);
 rootStore.dataStores.usersStore.addUser('B', 2);
 
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StoreProvider value={rootStore}><App /></StoreProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
