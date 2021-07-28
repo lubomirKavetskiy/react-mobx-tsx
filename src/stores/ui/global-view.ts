@@ -1,18 +1,25 @@
-import { autorun } from 'mobx'
+import { autorun, computed } from 'mobx'
+
 import RootStore from '../root-store'
 
 export default class GlobalView {
+  private readonly rootStore: RootStore;
+
   constructor(rootStore: RootStore) {
+    this.rootStore = rootStore
 
     autorun(() => {
-      const { usersList } = rootStore.dataStores.usersStore
-      const { todosList } = rootStore.dataStores.todosStore
-
-      console.log(`we have ${usersList.length} users,
-      the name of users are: ${usersList.map(user => `${user.name} - ${user.todos.map(({ name }) => name)}`)}.
-      we have ${todosList.length} users,
-      the name of todos are: ${todosList.map(({ name }) => name)}.
-      `)
+      console.log(this.status)
     })
+
+
+  }
+
+  @computed
+  get status() {
+    return `
+            User Names: ${this.rootStore.dataStores.usersStore.usersList.map(({ name }) => name)},
+            Total Todos: ${this.rootStore.dataStores.todosStore.todosList.length}
+        `;
   }
 }

@@ -8,8 +8,8 @@ export default class DataStore {
   todosStore: TodosStore
   usersStore: UsersStore
 
-  constructor() {
-    this.todosStore = new TodosStore()
-    this.usersStore = new UsersStore()
+  constructor(rootStore: RootStore) {
+    this.todosStore = new TodosStore(rootStore)
+    this.usersStore = new UsersStore(rootStore)
   }
 }

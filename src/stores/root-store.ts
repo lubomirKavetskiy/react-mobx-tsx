@@ -10,3 +10,4 @@ export default class RootStore {
     this.uiStores = new UiStore(this)
   }
 }
+
