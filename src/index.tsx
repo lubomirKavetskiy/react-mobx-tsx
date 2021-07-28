@@ -4,6 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import RootStore from './stores/root-store'
+
+const rootStore = new RootStore()
+
+// create 4 users
+rootStore.dataStores.usersStore.addUser('A', 1);
+rootStore.dataStores.usersStore.addUser('B', 2);
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
