@@ -1,11 +1,10 @@
-import GlobalView from './global-view'
-import RootStore from '../root-store'
-
+import GlobalView from './global-view';
+import RootStore from '../root-store';
 
 export default class UiStore {
-  globalView: GlobalView
+  globalView: GlobalView;
 
   constructor(rootStore: RootStore) {
-    this.globalView = new GlobalView(rootStore)
+    this.globalView = new GlobalView(rootStore);
   }
 }

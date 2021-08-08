@@ -1,51 +1,57 @@
-import { observable, reaction, makeObservable, action } from 'mobx'
+import { observable, reaction, makeObservable, action } from 'mobx';
 
 import RootStore from '../../root-store';
 
 let initId = 0;
 
 export default class Todo {
-  id = initId++
-  userId: number
+  id = initId++;
+  userId: number;
 
-  private disposer: () => void
-  private readonly rootStore: RootStore
+  private disposer: () => void;
+  private readonly rootStore: RootStore;
 
   constructor(name: string, userId: number, rootStore: RootStore) {
-    makeObservable(this)
-
-    this.name = name
-    this.userId = userId
-    this.rootStore = rootStore
+    this.userId = userId;
+    this.rootStore = rootStore;
+    this.name = name;
 
     //will trigger after every change of isCompleted
     this.disposer = reaction(
       () => this.isCompleted,
-      () => console.log(`Todo '${this.name}' is changed to ${this.isCompleted ? 'Complete' : 'Incomplete'}`)
-    )
+      () =>
+        console.log(
+          `Todo '${this.name}' is changed to ${
+            this.isCompleted ? 'Complete' : 'Incomplete'
+          }`
+        )
+    );
+
+    makeObservable(this, {
+      name: observable,
+      isCompleted: observable,
+      changeName: action,
+      toggle: action,
+    });
   }
 
   remove() {
-    this.rootStore.dataStores.todosStore.delTodo(this.name)
+    this.rootStore.dataStores.todosStore.delTodo(this.id);
   }
 
-  @observable
-  name = ''
+  name = '';
 
-  @observable
-  isCompleted = false
+  isCompleted = false;
 
-  @action
   changeName(name: string) {
-    this.name = name
+    this.name = name;
   }
 
-  @action
   toggle() {
-    this.isCompleted = !this.isCompleted
+    this.isCompleted = !this.isCompleted;
   }
 
   dispose() {
-    this.disposer()
+    this.disposer();
   }
 }

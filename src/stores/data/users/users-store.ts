@@ -1,40 +1,37 @@
-import { makeObservable, observable, action } from 'mobx'
+import { makeObservable, observable, action } from 'mobx';
 
-import RootStore from '../../root-store'
-import User from './user'
+import RootStore from '../../root-store';
+import User from './user';
 
 export default class UsersStore {
-  private readonly rootStore: RootStore
+  private readonly rootStore: RootStore;
 
   @observable
-  usersList: User[] = []
+  usersList: User[] = [];
 
   constructor(rootStore: RootStore) {
-    makeObservable(this)
-
-    this.rootStore = rootStore
+    this.rootStore = rootStore;
+    makeObservable(this);
   }
 
   @action
-  addUser(name: string, userId: number) {
-    this.usersList.push(new User(name, this.rootStore))
-
+  addUser(name: string) {
+    this.usersList.push(new User(name, this.rootStore));
   }
 
   getUser(name: string) {
-    return this.usersList.find(user => user.name === name)
+    return this.usersList.find((user) => user.name === name);
   }
 
   @action
   delUser(name: string) {
-    const user = this.getUser(name)
+    const user = this.getUser(name);
 
     // user?.todos.forEach(todo => this.rootStore.dataStores.todosStore.delTodo(todo.name))
     if (user) {
-      user.todos.forEach(todo => todo.remove())
+      user.todos.forEach((todo) => todo.remove());
 
-      this.usersList.splice(this.usersList.indexOf(user), 1)
+      this.usersList.splice(this.usersList.indexOf(user), 1);
     }
-
   }
 }

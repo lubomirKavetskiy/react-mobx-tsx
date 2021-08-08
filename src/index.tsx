@@ -7,16 +7,16 @@ import reportWebVitals from './reportWebVitals';
 import { createStore } from './stores/helpers/create-store';
 import { StoreProvider } from './stores/helpers/store-context';
 
-const rootStore = createStore()
+const rootStore = createStore();
 
-
-rootStore.dataStores.usersStore.addUser('A', 1);
-rootStore.dataStores.usersStore.addUser('B', 2);
-
+rootStore.dataStores.usersStore.addUser('A');
+rootStore.dataStores.usersStore.addUser('B');
 
 ReactDOM.render(
   <React.StrictMode>
-    <StoreProvider value={rootStore}><App /></StoreProvider>
+    <StoreProvider value={rootStore}>
+      <App />
+    </StoreProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
