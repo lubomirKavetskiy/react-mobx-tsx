@@ -1,22 +1,20 @@
 import { makeObservable, observable, action } from 'mobx';
+import { getRoot } from 'mobx-easy';
 
 import RootStore from '../../root-store';
 import User from './user';
 
 export default class UsersStore {
-  private readonly rootStore: RootStore;
-
   @observable
   usersList: User[] = [];
 
-  constructor(rootStore: RootStore) {
-    this.rootStore = rootStore;
+  constructor() {
     makeObservable(this);
   }
 
   @action
   addUser(name: string) {
-    this.usersList.push(new User(name, this.rootStore));
+    this.usersList.push(new User(name));
   }
 
   getUser(name: string) {
@@ -27,8 +25,10 @@ export default class UsersStore {
   delUser(name: string) {
     const user = this.getUser(name);
 
-    // user?.todos.forEach(todo => this.rootStore.dataStores.todosStore.delTodo(todo.name))
     if (user) {
+      // const rootStore = getRoot<RootStore>();
+      // user?.todos.forEach(todo => rootStore.dataStores.todosStore.delTodo(todo.name))
+
       user.todos.forEach((todo) => todo.remove());
 
       this.usersList.splice(this.usersList.indexOf(user), 1);

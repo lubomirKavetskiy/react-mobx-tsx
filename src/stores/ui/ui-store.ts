@@ -4,7 +4,7 @@ import RootStore from '../root-store';
 export default class UiStore {
   globalView: GlobalView;
 
-  constructor(rootStore: RootStore) {
-    this.globalView = new GlobalView(rootStore);
+  constructor() {
+    this.globalView = new GlobalView();
   }
 }

@@ -1,10 +1,5 @@
-import {
-  action,
-  autorun,
-  computed,
-  makeAutoObservable,
-  observable,
-} from 'mobx';
+import { autorun, makeAutoObservable } from 'mobx';
+import { getRoot } from 'mobx-easy';
 
 import RootStore from '../root-store';
 
@@ -14,13 +9,11 @@ export enum Views {
 }
 
 export default class GlobalView {
-  private readonly rootStore: RootStore;
-
   currView: Views = Views.Todos;
 
-  constructor(rootStore: RootStore) {
-    this.rootStore = rootStore;
+  constructor() {
     makeAutoObservable(this);
+
     autorun(() => {
       console.log('this.status', this.status);
     });
@@ -31,13 +24,13 @@ export default class GlobalView {
   }
 
   get status() {
+    const rootStore = getRoot<RootStore>();
+
     return `
-            User Names: ${this.rootStore.dataStores.usersStore.usersList.map(
+            User Names: ${rootStore.dataStores.usersStore.usersList.map(
               ({ name }) => name
             )},
-            Total Todos: ${
-              this.rootStore.dataStores.todosStore.todosList.length
-            }
+            Total Todos: ${rootStore.dataStores.todosStore.todosList.length}
         `;
   }
 }

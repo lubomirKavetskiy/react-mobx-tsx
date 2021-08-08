@@ -1,4 +1,5 @@
 import { observable, reaction, makeObservable, action } from 'mobx';
+import { getRoot } from 'mobx-easy';
 
 import RootStore from '../../root-store';
 
@@ -9,11 +10,9 @@ export default class Todo {
   userId: number;
 
   private disposer: () => void;
-  private readonly rootStore: RootStore;
 
-  constructor(name: string, userId: number, rootStore: RootStore) {
+  constructor(name: string, userId: number) {
     this.userId = userId;
-    this.rootStore = rootStore;
     this.name = name;
 
     //will trigger after every change of isCompleted
@@ -36,7 +35,9 @@ export default class Todo {
   }
 
   remove() {
-    this.rootStore.dataStores.todosStore.delTodo(this.id);
+    const rootStore = getRoot<RootStore>();
+
+    rootStore.dataStores.todosStore.delTodo(this.id);
   }
 
   name = '';
